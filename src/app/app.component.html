@@ -1,0 +1,317 @@
+<div class="container">
+  <div class="py-5 text-left">
+    <h2>Gerador de In-App</h2>
+  </div>
+  <div class="row">
+    <div class="col-lg-6 col-md-12">
+      <div class="row py-3">
+        <div class="col-5">Conteúdo</div>
+        <div class="col-7">
+          <select
+            [(ngModel)]="options.content"
+            class="form-control"
+            (change)="render()"
+          >
+            <option value="slide">Slide</option>
+            <option value="html">HTML</option>
+          </select>
+        </div>
+      </div>
+      <div *ngIf="isContent('html')">
+          <div class="py-3 form-group">
+
+          <div class="col-12 mt-1">
+              <label for="validationCustom04"
+                >Informe o HTML</label
+              >
+              <textarea
+                type="text"
+                class="form-control"
+                id="validationCustom04"
+                placeholder=""
+                [(ngModel)]="content"
+                (keyup)="render()"
+                rows="10"
+              ></textarea>
+            </div>
+          </div>
+      </div>
+      <ngb-tabset *ngIf="isContent('slide')" (tabChange)="onTabChange($event)">
+        <ngb-tab *ngFor="let tab of tabs; let i = index" [id]="i">
+          <ng-template ngbTabTitle
+            ><b>Slide {{ i + 1 }} </b></ng-template
+          >
+          <ng-template ngbTabContent>
+            <div class="py-3 form-group">
+              <button
+                class="btn-app btn-app-primary float-right"
+                *ngIf="moreOneTab()"
+                (click)="removeTab(i)"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+              <div class="col-12 py-3 mt-4">
+                <label for="validationCustom01"
+                  >URL Imagem do slide {{ i + 1 }}</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="validationCustom01"
+                  placeholder="URL"
+                  [(ngModel)]="tabs[i].img"
+                  (keyup)="changeUrl(i)"
+                />
+                <small
+                  id="emailHelp"
+                  class="form-text text-danger"
+                  *ngIf="tabs[i].imgValid"
+                  >Informe um URL de imagem válido</small
+                >
+              </div>
+              <div class="col-12 mt-1">
+                <label for="validationCustom01"
+                  >Texto acessibilidade do slide {{ i + 1 }}</label
+                >
+                <textarea
+                  type="text"
+                  class="form-control"
+                  id="validationCustom01"
+                  placeholder=""
+                  [(ngModel)]="tabs[i].text"
+                  (change)="render()"
+                ></textarea>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab id="add" *ngIf="maxTabs()">
+          <ng-template ngbTabTitle><i class="fa fa-plus"></i></ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+      <hr />
+      <div class="row py-3">
+        <div class="col-5">Template</div>
+        <div class="col-7">
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="inlineRadio1"
+              value="um"
+              (change)="templateSelected()"
+              [(ngModel)]="options.template"
+            />
+            <label class="form-check-label" for="inlineRadio1">1 Botão</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="inlineRadio2"
+              value="dois"
+              (change)="templateSelected()"
+              [(ngModel)]="options.template"
+            />
+            <label class="form-check-label" for="inlineRadio2">2 botões</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="inlineRadioOptions"
+              id="inlineRadio3"
+              (change)="templateSelected()"
+              [(ngModel)]="options.template"
+              value="sem"
+            />
+            <label class="form-check-label" for="inlineRadio3">Sem botão</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row py-3" *ngIf="options.template != 'sem'">
+        <label for="inputPassword" class="col-6 col-form-label"
+          >Exibir botão de fechar</label
+        >
+        <div class="col-6">
+          <select
+            [(ngModel)]="options.close"
+            class="form-control"
+            (change)="render()"
+          >
+            <option value="yes">Sim</option>
+            <option value="no">Não</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row py-3" *ngIf="haveTwoButton()">
+        <label for="inputPassword" class="col-6 col-form-label"
+          >Tipo de botões</label
+        >
+        <div class="col-6">
+          <select
+            [(ngModel)]="Render.buttonsType"
+            class="form-control"
+            (change)="render()"
+          >
+            <option value="horizontal">Lado a lado</option>
+            <option value="vertical">Empilhado</option>
+          </select>
+        </div>
+      </div>
+      <hr *ngIf="haveButton()" />
+      <ngb-tabset justify="fill">
+        <ngb-tab *ngFor="let button of Render.buttons; let i = index">
+          <ng-template ngbTabTitle
+            ><b>Botão {{ i + 1 }} </b></ng-template
+          >
+          <ng-template ngbTabContent>
+            <div class="p-3 form-group">
+              <div class="col-12">
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-3 col-form-label"
+                    >Texto</label
+                  >
+                  <div class="col-sm-9">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Texto do label"
+                      [(ngModel)]="Render.buttons[i].text"
+                      (change)="render()"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-3 col-form-label"
+                    >Tipo de link</label
+                  >
+                  <div class="col-sm-9">
+                    <select
+                      [(ngModel)]="Render.buttons[i].typeLink"
+                      class="form-control"
+                      (change)="changeTypeLink(i)"
+                    >
+                      <option selected value="deepLink">Deep Link</option>
+                      <option value="external">Outro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="typeLinkIsDeepLink(i)">
+                  <label for="staticEmail" class="col-sm-3 col-form-label"
+                    >Link</label
+                  >
+                  <div class="input-group col-sm-9">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Selecione o deep link"
+                      [ngbTypeahead]="search"
+                      [(ngModel)]="Render.buttons[i].label"
+                      [resultTemplate]="deepLinkData"
+                      [inputFormatter]="formatterDeepLink"
+                      (selectItem)="selectedDeepLink($event, i)"
+                      [disabled]="Render.buttons[i].selected"
+                    />
+                    <div
+                      class="input-group-append"
+                      *ngIf="Render.buttons[i].selected"
+                      (click)="unselectedDeepLink(i)"
+                    >
+                      <button class="btn-app btn-app-primary" type="button">
+                        X
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row" *ngIf="!typeLinkIsDeepLink(i)">
+                  <label for="staticEmail" class="col-sm-3 col-form-label"
+                    >Link</label
+                  >
+                  <div class="input-group col-sm-9">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Digite o link"
+                      [(ngModel)]="Render.buttons[i].link"
+                      (change)="render()"
+                    />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-3 col-form-label"
+                    >Texto</label
+                  >
+                  <div class="col-sm-9">
+                    <select
+                      [(ngModel)]="Render.buttons[i].type"
+                      class="form-control"
+                      (change)="render()"
+                    >
+                      <option selected value="primary">Varejo</option>
+                      <option value="secundary">Branco</option>
+                      <option value="third">Personnalite</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+
+      <hr *ngIf="haveButton()" />
+      <button
+        class="btn-app btn-app-primary full-width"
+        (click)="downloadHtml()"
+        *ngIf="options.hideDownload"
+      >
+        <i class="fa fa-download"></i> Download HTML
+      </button>
+    </div>
+    <div class="col-lg-6 col-md-12 text-center">
+      <button
+        class="btn-app btn-app-primary mb-4"
+        (click)="downloadHtml()"
+        *ngIf="options.hideDownload"
+      >
+        <i class="fa fa-download"></i> Download HTML
+      </button>
+      <iframe
+        height="812px"
+        width="375px"
+        id="renderHtml"
+        name="renderHtml"
+        [src]="urlDemo | safeHtml"
+        class="body"
+      ></iframe>
+      <!-- <div class="smartphone zoom-1 notification on">
+        <span class="btn btn-up-down"></span>
+        <span class="btn btn-power"></span>
+
+        <section class="header">
+          <span class="badge"></span>
+          <span class="cam"></span>
+        </section>
+        <div class="screen">
+          <iframe
+            height="100%"
+            width="100%"
+            id="renderHtml"
+            name="renderHtml"
+            [src]="urlDemo | safeHtml"
+            class="body"
+          ></iframe>
+        </div>
+      </div> -->
+    </div>
+  </div>
+  <hr />
+  <h6 class="text-center mb-5">Squad Notificações</h6>
+</div>
+
+<ng-template #deepLinkData let-r="result" let-t="term">
+  <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+</ng-template>
