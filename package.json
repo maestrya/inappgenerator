@@ -9,7 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy": "ng build --prod && npm run upload",
-    "upload": "npx ngh --repo=https://github.com/inappgenerator/inappgenerator.github.io.git --name=velrino --email=denismagalhaesvelrino@gmail.com  --branch=master --dir=dist/"
+    "upload": "npx ngh --repo=git@github.com:autockage/inappgenerator.git --name=velrino --email=denismagalhaesvelrino@gmail.com  --branch=gh-pages --dir=dist/"
   },
   "private": true,
   "dependencies": {
